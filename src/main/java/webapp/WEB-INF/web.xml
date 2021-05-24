@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--web.xml is your depoyment descriptor
+        this is how tomcat gathers information about your project, such as welcome files,
+            available servlets, how to handle errors and exceptions, and other various
+            configurations you may want tomcat to know about.
+    It belongs in src/main/webapp/WEB-INF/ directory
+-->
+<web-app
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        version="2.5">
+
+    <!--This tells tomcat where to find the servlet and what name to register it as. We can use
+            the name of the servlet later to reference this instance.
+            -->
+    <!--
+    <servlet>
+        <servlet-name>userServlet</servlet-name>
+        <servlet-class>com.revature.quizzard.servlet.UserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>userServlet</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <listener-class>com.revature.quizzard.servlet.DependencyLoaderListener</listener-class>
+    </listener>
+    -->
+
+</web-app>
