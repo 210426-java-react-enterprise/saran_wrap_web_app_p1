@@ -1,11 +1,11 @@
 package com.revature.project1.screens;
 
-import com.revature.project1.util.structures.LinkedList;
 import com.revature.project1.daos.UserDAO;
 import com.revature.project1.models.AppUser;
 import com.revature.project1.util.ScreenRouter;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import static com.revature.project1.Driver.app;
 
@@ -36,7 +36,7 @@ public class UserHomeScreen extends Screen {
         LinkedList currentUserAccounts;
         currentUserAccounts = userDAO.getAllCurrentUserAccounts(currentUser);
         if (!currentUserAccounts.isEmpty()){
-            currentUserAccounts.printLinkedList();
+            System.out.println(currentUserAccounts.toString());
         }
 
         //Displays Home Screen Menu

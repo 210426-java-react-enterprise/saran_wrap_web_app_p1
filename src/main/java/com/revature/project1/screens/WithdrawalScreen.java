@@ -11,13 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.time.Instant;
 
-public class WithdrawlScreen extends Screen {
+public class WithdrawalScreen extends Screen {
     private UserDAO userDao = new UserDAO();
     private BufferedReader consoleReader;
     private ScreenRouter router;
     private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public WithdrawlScreen(BufferedReader consoleReader, ScreenRouter router){
+    public WithdrawalScreen(BufferedReader consoleReader, ScreenRouter router){
         super("WithdrawlScreen","/withdrawl");
         this.consoleReader = consoleReader;
         this.router= router;

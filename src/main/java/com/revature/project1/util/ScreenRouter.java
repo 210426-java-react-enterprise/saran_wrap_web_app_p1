@@ -2,7 +2,7 @@ package com.revature.project1.util;
 
 import com.revature.project1.models.AppUser;
 import com.revature.project1.screens.Screen;
-import com.revature.project1.util.structures.LinkedList;
+import java.util.LinkedList;
 
 //Aggregation of multiple screen routers
 public class ScreenRouter {

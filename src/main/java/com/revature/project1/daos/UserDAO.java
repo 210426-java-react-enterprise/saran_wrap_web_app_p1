@@ -1,11 +1,12 @@
 package com.revature.project1.daos;
 import com.revature.project1.models.UserTransactionHistory;
-import com.revature.project1.util.structures.LinkedList;
 import com.revature.project1.models.AppUser;
 import com.revature.project1.models.UserAccount;
 import com.revature.project1.util.ConnectionFactory;
 
 import java.sql.*;
+import java.util.LinkedList;
+
 /*TODO make sure to organize userDAO group functionalities
 *  -ADD BUSINESS LOGIC TO PASSWORD
 *  -FIGURE OUT HOW TO STORE PASSWORD SECURELY*/

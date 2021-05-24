@@ -1,10 +1,10 @@
 package com.revature.project1.screens;
 import com.revature.project1.daos.UserDAO;
 import com.revature.project1.models.AppUser;
-import com.revature.project1.util.structures.LinkedList;
 import com.revature.project1.util.ScreenRouter;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 public class TransactionScreen extends Screen{
@@ -34,7 +34,7 @@ public class TransactionScreen extends Screen{
             userChoice = consoleReader.readLine();
             if (userChoice.equalsIgnoreCase("y")){
                 accountHistory = userDao.getAllTransactions(currentUser.getId());
-                accountHistory.printLinkedList();
+                System.out.println(accountHistory.toString());
             }
             //Needs to handle case in which Account Name does not exist
             else if (userChoice.equalsIgnoreCase("n")){
@@ -42,7 +42,7 @@ public class TransactionScreen extends Screen{
                 System.out.println("Name/Type of Account:");
                 accountName = consoleReader.readLine();
                 accountHistory = userDao.getTransactions(currentUser.getId(), accountName);
-                accountHistory.printLinkedList();
+                System.out.println(accountHistory.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
