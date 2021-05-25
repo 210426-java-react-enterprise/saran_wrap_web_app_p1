@@ -1,8 +1,8 @@
-import com.revature.project0.daos.UserDAO;
-import com.revature.project0.exception.*;
-import com.revature.project0.services.UserService;
-import com.revature.project0.models.AppUser;
-import com.revature.project0.util.ConnectionFactory;
+import com.revature.project1.daos.UserDAO;
+import com.revature.project1.exception.*;
+import com.revature.project1.services.UserService;
+import com.revature.project1.models.AppUser;
+import com.revature.project1.util.ConnectionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -166,7 +166,7 @@ public class UserServiceTest {
     @Test
     public void test_registerNonValidUserAndEmailAndPassword() {
         // Arrange
-        when(mockUserDao.loginValidation(anyString(),anyString())).thenReturn(null);
+        when(mockUserDao.loginValidation(conn, anyString(),anyString())).thenReturn(null);
         when(mockUserDao.isEmailAvailible(anyString())).thenReturn(true);
         when(mockUserDao.isPasswordSecure(anyString())).thenReturn(false);
         // Act
@@ -187,12 +187,12 @@ public class UserServiceTest {
     @Test
     public void test_loginValidation(){
         // Arrange
-        when(mockUserDao.loginValidation(anyString(),anyString())).thenReturn(null);
+        when(mockUserDao.loginValidation(conn, anyString(),anyString())).thenReturn(null);
         // Act
-        mockUserDao.loginValidation("unamdse", "myPasswordIsV3rYS3cur3");
+        mockUserDao.loginValidation(conn, "unamdse", "myPasswordIsV3rYS3cur3");
 
         //verify(mockConnectionFactory, times(1)).getConnection();
-        verify(mockUserDao, times(1)).loginValidation(anyString(),anyString());
+        verify(mockUserDao, times(1)).loginValidation(conn, anyString(),anyString());
     }
 
 

@@ -1,8 +1,16 @@
 package com.revature.project1.services;
+
 import com.revature.project1.daos.UserDAO;
+//import com.revature.project1.exception.AuthenticationException;
 import com.revature.project1.models.AppUser;
-import com.revature.project1.exception.ResourcePersistenceException;
-import com.revature.project1.exception.InvalidRequestException;
+import com.revature.project1.exception.*;
+import com.revature.project1.util.ConnectionFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class UserService {
     private UserDAO userDao;
@@ -10,32 +18,48 @@ public class UserService {
     public UserService(UserDAO userDao){
         this.userDao = userDao;
     }
-    public void register(AppUser newUser){
-        //validates entries upon registration using our own custom exceptions
-        if (!isUserValid(newUser)){
-            throw new InvalidRequestException("Invalid new user data provided! ");
+    public AppUser authenticate(String username,String password) throws AuthenticationException{
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            //add connection to loginValidation will break loginScreen
+            //Figure out why orElseThrow isnt functioning
+            return userDao.loginValidation(conn,username,password)
+                    .orElseThrow(AuthenticationException::new);
+        }catch( SQLException | DataSourceException e){
+            throw new AuthenticationException("Unable to authenticate User with provided credentials");
         }
-        if (!userDao.isUsernameAvailible(newUser.getUsername())){
-            throw new ResourcePersistenceException("Username taken.");
-        }
-        if (!userDao.isEmailAvailible(newUser.getEmail())){
-            throw new ResourcePersistenceException("Email has already been used. ");
-        }
-        if (!userDao.isPasswordSecure(newUser.getPassword())){
-            throw new ResourcePersistenceException("Password is not secure enough. ");
-        }
-        userDao.save(newUser);
     }
-    //Makes sure user info input is valid
-    public boolean isUserValid(AppUser user){
+    public void register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException{
+        if(!userDao.isUsernameAvailible(newUser)){
+            throw new InvalidRequestException(("new user data invalid"));
+        }
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
+                throw new UsernameUnavailableException();
+            }
+
+            if (!userDao.isEmailAvailable(conn, newUser.getEmail())) {
+                throw new EmailUnavailableException();
+            }
+
+            userDao.save(conn, newUser);
+            conn.commit();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }catch(UsernameUnavailableException | EmailUnavailableException e){
+            throw new ResourcePersistenceException(e.getMessage());
+        }
+    }
+    private boolean isUserValid(AppUser user) {
+        Predicate<String> isNullOrEmpty = str -> str == null || str.trim().isEmpty();
+        BiPredicate<String, Integer> lengthIsInvalid = (str, length) -> str.length() > length;
+
         if (user == null) return false;
-        if (user.getUsername()==null|| user.getUsername().trim().isEmpty() || user.getUsername().length() > 20 )  return false;
-        if (user.getPassword()==null|| user.getPassword().trim().isEmpty() || user.getPassword().length() > 255 ) return false;
-        if (user.getEmail()==null|| user.getEmail().trim().isEmpty() || user.getEmail().length() > 255 ) return false;
-        if (user.getFirstName()==null|| user.getFirstName().trim().isEmpty() || user.getFirstName().length() > 25 ) return false;
-        if (user.getLastName()==null|| user.getLastName().trim().isEmpty() || user.getLastName().length() > 25 ) return false;
-        if (user.getAge()<0 )  return false;
-        return true;
+        if (isNullOrEmpty.test(user.getUsername()) || lengthIsInvalid.test(user.getUsername(), 20)) return false;
+        if (isNullOrEmpty.test(user.getPassword()) || lengthIsInvalid.test(user.getPassword(), 255)) return false;
+        if (isNullOrEmpty.test(user.getEmail()) || lengthIsInvalid.test(user.getEmail(), 255)) return false;
+        if (isNullOrEmpty.test(user.getFirstName()) || lengthIsInvalid.test(user.getFirstName(), 25)) return false;
+        if (isNullOrEmpty.test(user.getLastName()) || lengthIsInvalid.test(user.getLastName(), 25)) return false;
+        return user.getAge() >= 0;
     }
 
 }

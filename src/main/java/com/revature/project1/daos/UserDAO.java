@@ -3,7 +3,7 @@ import com.revature.project1.models.UserTransactionHistory;
 import com.revature.project1.models.AppUser;
 import com.revature.project1.models.UserAccount;
 import com.revature.project1.util.ConnectionFactory;
-
+import com.revature.project1.exception.*;
 import java.sql.*;
 import java.util.LinkedList;
 
@@ -11,8 +11,8 @@ import java.util.LinkedList;
 *  -ADD BUSINESS LOGIC TO PASSWORD
 *  -FIGURE OUT HOW TO STORE PASSWORD SECURELY*/
 public class UserDAO {
-    public void save(AppUser newUser){
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+    public void save(Connection conn,AppUser newUser){
+        try {
             String sqlInsertUser = "insert into bigballerbank.customer (username , password , email , first_name , last_name , user_age ) values (?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sqlInsertUser,new String[]{"user_id"});
             pstmt.setString(1,newUser.getUsername());
@@ -72,7 +72,7 @@ public class UserDAO {
         return true;
     }
     //Checks if username has been taken @EJ: Do you know how to spell?
-    public Boolean isUsernameAvailible(String username){
+    public Boolean isUsernameAvailible(AppUser username){
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = "select * from bigballerbank.customer where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -88,9 +88,9 @@ public class UserDAO {
         return true;
     }
     //Checks to see if user account exists in DB
-    public AppUser loginValidation(String username,String password){
+    public AppUser loginValidation(Connection conn, String username, String password){
         AppUser user = null;
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+        try{
 
             String sql = "select * from bigballerbank.customer where username = ? and password = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -132,8 +132,8 @@ public class UserDAO {
 
     /**Mark:: ----ALL USER ACCOUNT METHODS----**/
     //Saves a creation of new account
-    public void saveAccount(UserAccount newAccount){
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+    public void saveAccount(Connection conn,UserAccount newAccount){
+        try {
             String sqlInsertAccount = "insert into bigballerbank.account (user_id, balance, account_type) values (?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sqlInsertAccount,new String[]{"account_id"});
             pstmt.setInt(1,newAccount.getUserId());
@@ -291,6 +291,43 @@ public class UserDAO {
             throwables.printStackTrace();
         }
         return currentUserTransactions;
+    }
+    public boolean isEmailAvailable(Connection conn, String email) {
+        try {
+
+            String sql = "select * from quizzard.users where email = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new DataSourceException();
+        }
+
+        return true;
+    }
+    public boolean isUsernameAvailable(Connection conn, String username) {
+        try {
+
+            String sql = "select * from quizzard.users where username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new DataSourceException();
+        }
+
+        return true;
+
     }
 
 

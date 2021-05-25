@@ -1,5 +1,5 @@
 package com.revature.project1.models;
-
+import com.revature.project1.exception.*;
 //import com.revature.project1.annotations.Column;
 //import com.revature.project1.annotations.Entity;
 //import com.revature.project1.annotations.Id;
@@ -102,4 +102,5 @@ public class AppUser {
         sb.append('}');
         return sb.toString();
     }
+
 }
