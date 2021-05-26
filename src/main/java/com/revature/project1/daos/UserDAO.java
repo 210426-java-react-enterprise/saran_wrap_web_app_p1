@@ -6,11 +6,67 @@ import com.revature.project1.util.ConnectionFactory;
 import com.revature.project1.exception.*;
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.Optional;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /*TODO make sure to organize userDAO group functionalities
 *  -ADD BUSINESS LOGIC TO PASSWORD
 *  -FIGURE OUT HOW TO STORE PASSWORD SECURELY*/
 public class UserDAO {
+
+
+    public List<AppUser> findAllUsers(Connection conn) {
+        List<AppUser> users = new ArrayList<>();
+
+
+        try {
+
+            String sql = "SELECT * FROM quizzard.users";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                AppUser temp = new AppUser();
+                temp.setId(rs.getInt("user_id"));
+                temp.setUsername(rs.getString("username"));
+                temp.setPassword(rs.getString("password"));
+                temp.setFirstName(rs.getString("first_name"));
+                temp.setLastName(rs.getString("last_name"));
+                temp.setEmail(rs.getString("email"));
+                temp.setAge(rs.getInt("age"));
+                users.add(temp);
+            }
+
+
+        } catch (SQLException e) {
+            throw new DataSourceException();
+        }
+
+        return users;
+    }
+
+    public Optional<AppUser> findUserById(Connection conn, int id) {
+
+        Optional<AppUser> _user = Optional.empty();
+
+        try {
+            String sql = "SELECT * FROM quizzard.users WHERE user_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+
+            ResultSet rs = pstmt.executeQuery();
+            _user = getOne(rs);
+
+        } catch (SQLException e) {
+
+            throw new DataSourceException();
+        }
+
+        return _user;
+    }
+
     public void save(Connection conn,AppUser newUser){
         try {
             String sqlInsertUser = "insert into bigballerbank.customer (username , password , email , first_name , last_name , user_age ) values (?,?,?,?,?,?)";
@@ -76,7 +132,7 @@ public class UserDAO {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = "select * from bigballerbank.customer where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,username);
+            pstmt.setString(1,username.getUsername());
             ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
@@ -87,31 +143,48 @@ public class UserDAO {
         }
         return true;
     }
-    //Checks to see if user account exists in DB
-    public AppUser loginValidation(Connection conn, String username, String password){
+    private Optional<AppUser> getOne(ResultSet rs) throws SQLException {
+
         AppUser user = null;
-        try{
 
-            String sql = "select * from bigballerbank.customer where username = ? and password = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,username);
-            pstmt.setString(2,password);
-
-            ResultSet rs = pstmt.executeQuery();
-            while(rs.next()){
-                user = new AppUser();
-                user.setId(rs.getInt("user_id"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setFirstName(rs.getString("first_name"));
-                user.setLastName(rs.getString("last_name"));
-                user.setAge(rs.getInt("user_age"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            user = new AppUser();
+            user.setId(rs.getInt("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setFirstName(rs.getString("first_name"));
+            user.setLastName(rs.getString("last_name"));
+            user.setEmail(rs.getString("email"));
+            user.setAge(rs.getInt("age"));
         }
-        return user;
+
+        return Optional.ofNullable(user);
+
+    }
+    //Checks to see if user account exists in DB
+    public Optional<AppUser> loginValidation(Connection conn, String username, String password) {
+
+        Optional<AppUser> _user = Optional.empty();
+        try {
+
+            String sql = "select * from customer where username = ? and password = ?";
+            if (conn == null) {
+                throw new NullPointerException(System.getProperty("host_url") +
+                        " is what has been given as the host url from environment variables \n and the username is: " +
+                        System.getProperty("db_username") + " with a password of: " + System.getProperty("db_password"));
+            }
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            _user = getOne(rs);
+
+        } catch (SQLException e) {
+
+            throw new DataSourceException();
+        }
+
+        return _user;
     }
 
 //    // TODO implement me: You can only delete an account when signed in

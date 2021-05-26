@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 import static com.revature.project1.Driver.app;
 
+//import static Driver.app;
+
 public class UserHomeScreen extends Screen {
     private UserDAO userDAO = new UserDAO();
     private BufferedReader consoleReader;

@@ -18,6 +18,15 @@ public class UserService {
     public UserService(UserDAO userDao){
         this.userDao = userDao;
     }
+    public List<AppUser> getAllUsers() {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            return userDao.findAllUsers(conn);
+        }  catch (SQLException | DataSourceException e) {
+            throw new ResourceNotFoundException();
+        }
+
+    }
+
     public AppUser authenticate(String username,String password) throws AuthenticationException{
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             //add connection to loginValidation will break loginScreen

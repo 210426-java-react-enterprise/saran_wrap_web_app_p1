@@ -58,7 +58,7 @@ public class CreateAccountScreen extends Screen {
                 System.out.println("Entry invalid. Please log back in and try again !");
             }
             UserAccount newAccount = new UserAccount(userId,balance,accountType);
-            userDao.saveAccount(newAccount);
+            //userDao.saveAccount(newAccount);
             UserTransactionHistory newTransaction = new UserTransactionHistory(currentUser.getId(),"DEPOSIT",balance,String.valueOf(instant),accountType);
             userDao.updateTransactionsTable(newTransaction);
 

@@ -1,9 +1,11 @@
 package com.revature.project1.screens;
 
 import com.revature.project1.util.ScreenRouter;
-import static com.revature.project1.Driver.app;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import static com.revature.project1.Driver.app;
 
 public class WelcomeScreen extends Screen{
     private final BufferedReader consoleReader;
