@@ -31,9 +31,14 @@ public class UserService {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             //add connection to loginValidation will break loginScreen
             //Figure out why orElseThrow isnt functioning
-            return userDao.loginValidation(conn,username,password)
-                    .orElseThrow(AuthenticationException::new);
+            AppUser defaultUser = new AppUser();
+            if ((userDao.loginValidation(conn,username,password) != null)){
+                return userDao.loginValidation(conn, username, password);
+            }
+            return defaultUser;
+
         }catch( SQLException | DataSourceException e){
+            e.printStackTrace();
             throw new AuthenticationException("Unable to authenticate User with provided credentials");
         }
     }
@@ -69,6 +74,19 @@ public class UserService {
         if (isNullOrEmpty.test(user.getFirstName()) || lengthIsInvalid.test(user.getFirstName(), 25)) return false;
         if (isNullOrEmpty.test(user.getLastName()) || lengthIsInvalid.test(user.getLastName(), 25)) return false;
         return user.getAge() >= 0;
+    }
+    public AppUser getUserById(int id) {
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            return userDao.findUserById(conn, id)
+                    .orElseThrow(ResourceNotFoundException::new);
+
+        }  catch (SQLException | DataSourceException e) {
+            throw new ResourceNotFoundException();
+        } catch (NumberFormatException e) {
+            throw new InvalidRequestException("An illegal value was provided!");
+        }
     }
 
 }

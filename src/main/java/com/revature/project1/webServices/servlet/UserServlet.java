@@ -26,21 +26,25 @@ public class UserServlet extends HttpServlet {
     //post CREATE - INSERT
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        resp.setStatus(205);
 
     }
 
     //get READ - SELECT
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //mapper object that converts json file
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
         resp.setContentType("application/json");
 
         HttpSession session = req.getSession(false);
-        AppUser requestingUser=(session == null) ? null :(AppUser)  session.getAttribute("this-user");
+        AppUser requestingUser=(session == null) ? null : (AppUser)  session.getAttribute("this-user");
 
         if(requestingUser == null){
             resp.setStatus((401));
+
             return;
         }else if(!requestingUser.getUsername().equals("username")) {
             resp.setStatus(403);
@@ -51,6 +55,12 @@ public class UserServlet extends HttpServlet {
         try{
             if(userIdParam == null){
                 List<AppUser> users = userService.getAllUsers();
+                writer.write(mapper.writeValueAsString(users));
+            }else{
+                int soughtId = Integer.parseInt(userIdParam);
+                AppUser user = userService.getUserById(soughtId);
+                writer.write(mapper.writeValueAsString(user));
+
             }
         }catch (Exception e){
             e.printStackTrace();

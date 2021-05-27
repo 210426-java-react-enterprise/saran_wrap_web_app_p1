@@ -39,22 +39,29 @@ public class AuthServlet extends HttpServlet {
 
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
+        resp.setStatus(200);
         resp.setContentType("application/json");
 
         try {
-            Credentials creds = mapper.readValue(req.getInputStream(), Credentials.class);
 
+            Credentials creds = mapper.readValue(req.getInputStream(), Credentials.class);
+            writer.write("credentials obj: "+String.valueOf(creds)+
+                    "\ncred uname: "+creds.getUsername()
+                    +"\n cred pword: "+creds.getPassword()+"\n");
+            resp.setStatus(200);
             AppUser authUser = userService.authenticate(creds.getUsername(), creds.getPassword());
+            //throwing auth error here:issue is that userDao is not finding my user
             writer.write(mapper.writeValueAsString(authUser));
 
             req.getSession().setAttribute("this-user", authUser);
             resp.setStatus(200);
 
+
         } catch (MismatchedInputException e) {
 
             resp.setStatus(400);
         } catch (AuthenticationException e) {
-
+            e.printStackTrace();
             resp.setStatus(401);
         } catch (Exception e) {
             e.printStackTrace();

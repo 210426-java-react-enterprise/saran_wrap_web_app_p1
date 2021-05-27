@@ -23,8 +23,8 @@ public class DependencyLoaderListener implements ServletContextListener {
         UserServlet userServlet = new UserServlet(userService);
 
         ServletContext context = servletContextEvent.getServletContext();
-        context.addServlet("AuthServlet",authServlet).addMapping("/authentication");
-        context.addServlet("UserServlet",authServlet).addMapping("/users/*");
+        context.addServlet("AuthServlet",authServlet).addMapping("/auth");
+        context.addServlet("UserServlet",userServlet).addMapping("/users/*");
 
     }
 

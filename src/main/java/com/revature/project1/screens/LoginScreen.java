@@ -33,7 +33,7 @@ public class LoginScreen extends Screen {
             password = consoleReader.readLine();
             //Checks for Valid User
             if (username != null && !username.isEmpty() && password != null && !password.isEmpty()){
-//                AppUser authenticatedUser = userDao.loginValidation(username,password);
+                AppUser authenticatedUser = userDao.loginValidation(username,password);
 //                if (authenticatedUser != null){
 //                    System.out.println("Login Successful!");
 //                    System.out.println("Navigating to Home Screen...");
@@ -43,7 +43,7 @@ public class LoginScreen extends Screen {
 //                    System.out.println("Login failed.");
 //                }
 
-                System.out.println("pass");
+                System.out.println(authenticatedUser);
             }else{
                 System.out.println("It looks like you didnt provide valid credentials");
             }

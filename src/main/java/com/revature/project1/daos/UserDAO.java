@@ -24,7 +24,7 @@ public class UserDAO {
 
         try {
 
-            String sql = "SELECT * FROM quizzard.users";
+            String sql = "SELECT * FROM bigballerbank.customer";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -35,7 +35,7 @@ public class UserDAO {
                 temp.setFirstName(rs.getString("first_name"));
                 temp.setLastName(rs.getString("last_name"));
                 temp.setEmail(rs.getString("email"));
-                temp.setAge(rs.getInt("age"));
+                temp.setAge(rs.getInt("user_age"));
                 users.add(temp);
             }
 
@@ -52,12 +52,12 @@ public class UserDAO {
         Optional<AppUser> _user = Optional.empty();
 
         try {
-            String sql = "SELECT * FROM quizzard.users WHERE user_id = ?";
+            String sql = "SELECT * FROM bigballerbank.customer WHERE user_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
 
             ResultSet rs = pstmt.executeQuery();
-            _user = getOne(rs);
+            _user = Optional.of(getOne(rs));
 
         } catch (SQLException e) {
 
@@ -143,7 +143,7 @@ public class UserDAO {
         }
         return true;
     }
-    private Optional<AppUser> getOne(ResultSet rs) throws SQLException {
+    private AppUser getOne(ResultSet rs) throws SQLException {
 
         AppUser user = null;
 
@@ -155,37 +155,64 @@ public class UserDAO {
             user.setFirstName(rs.getString("first_name"));
             user.setLastName(rs.getString("last_name"));
             user.setEmail(rs.getString("email"));
-            user.setAge(rs.getInt("age"));
+            user.setAge(rs.getInt("user_age"));
         }
 
-        return Optional.ofNullable(user);
+        return user;
 
     }
     //Checks to see if user account exists in DB
-    public Optional<AppUser> loginValidation(Connection conn, String username, String password) {
+    public AppUser loginValidation(Connection conn, String username, String password) {
 
-        Optional<AppUser> _user = Optional.empty();
+        AppUser _user = null;
         try {
-
-            String sql = "select * from customer where username = ? and password = ?";
+            String sql = "select * from bigballerbank.customer where username = ? and password = ?";
             if (conn == null) {
                 throw new NullPointerException(System.getProperty("host_url") +
-                        " is what has been given as the host url from environment variables \n and the username is: " +
-                        System.getProperty("db_username") + " with a password of: " + System.getProperty("db_password"));
+                        " is what has been given as the host url from environment variables " +
+                        "\n and the username is: " +
+                        System.getProperty("username") + " with a password of: " + System.getProperty("password"));
             }
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
+            System.out.println(rs);
             _user = getOne(rs);
 
         } catch (SQLException e) {
-
             throw new DataSourceException();
         }
 
         return _user;
     }
+    public AppUser loginValidation( String username, String password) {
+        System.out.println(username);
+        AppUser _user = null;
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = "select * from bigballerbank.customer where username = ? and password = ?";
+            if (conn == null) {
+                throw new NullPointerException(System.getProperty("host_url") +
+                        " is what has been given as the host url from environment variables " +
+                        "\n and the username is: " +
+                        System.getProperty("username") + " with a password of: " + System.getProperty("password"));
+            }
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+
+            _user = getOne(rs);
+            System.out.println(_user.getUsername());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataSourceException();
+        }
+
+        return _user;
+    }
+
 
 //    // TODO implement me: You can only delete an account when signed in
 //    public void deleteAccount(AppUser user){

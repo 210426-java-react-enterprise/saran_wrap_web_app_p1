@@ -17,16 +17,6 @@ public class ConnectionFactory {
     private static ConnectionFactory connectionFactory;//lazy singleton
     private Properties props = new Properties();
 
-    //lazy because it will only create the instance only
-    // when the getInstance method is called
-    //creates and returns our ONE connection factory instance
-    public static ConnectionFactory getInstance() {
-        if (connectionFactory == null) {
-            connectionFactory = new ConnectionFactory();
-        }
-        return connectionFactory;
-    }
-
     //this static block grabs the proper Driverclass and loads it into memory
     //so it has the right driver file to connect our data base
     //loads driver class
@@ -37,7 +27,6 @@ public class ConnectionFactory {
             e.printStackTrace();
         }
     }
-
     //this function loads our properties file (which holds our database credentials)
     private ConnectionFactory(){
 
@@ -53,6 +42,20 @@ public class ConnectionFactory {
         }
 
     }
+
+    //lazy because it will only create the instance only
+    // when the getInstance method is called
+    //creates and returns our ONE connection factory instance
+    public static ConnectionFactory getInstance() {
+        if (connectionFactory == null) {
+            connectionFactory = new ConnectionFactory();
+        }
+        return connectionFactory;
+    }
+
+
+
+
 
     public Connection getConnection(){
         Connection conn = null;
@@ -70,7 +73,7 @@ public class ConnectionFactory {
                     props.getProperty("username"),
                     props.getProperty("password")
             );
-
+            conn.setAutoCommit(false);
 
         }catch(SQLException sqle){
             sqle.printStackTrace();
