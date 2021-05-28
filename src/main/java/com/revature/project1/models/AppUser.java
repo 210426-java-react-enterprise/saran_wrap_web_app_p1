@@ -1,32 +1,30 @@
 package com.revature.project1.models;
-import com.revature.project1.exception.*;
-//import com.revature.project1.annotations.Column;
-//import com.revature.project1.annotations.Entity;
-//import com.revature.project1.annotations.Id;
+import com.revature.project1.annotations.Column;
+import com.revature.project1.annotations.Entity;
+import com.revature.project1.annotations.Id;
 
-//@Table
-//@Entity(name = "app_users")
+@Entity(name = "customer")
 public class AppUser {
-    //@Id
-    //@Column(name = "user_id")
+    @Id
+    @Column(name = "user_id")
     private int id;
 
-    //@Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    //@Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    //@Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    //@Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    //@Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    //@Column(name = "user_age", nullable = false)
+    @Column(name = "user_age", nullable = false)
     private int age;
 
     public  AppUser(){

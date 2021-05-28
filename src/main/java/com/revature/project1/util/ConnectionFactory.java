@@ -73,7 +73,7 @@ public class ConnectionFactory {
                     props.getProperty("username"),
                     props.getProperty("password")
             );
-            conn.setAutoCommit(false);
+//            conn.setAutoCommit(false);
 
         }catch(SQLException sqle){
             sqle.printStackTrace();

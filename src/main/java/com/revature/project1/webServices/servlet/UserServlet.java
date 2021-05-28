@@ -7,7 +7,7 @@ import com.revature.project1.dtos.Credentials;
 import com.revature.project1.exception.InvalidRequestException;
 import com.revature.project1.exception.ResourceNotFoundException;
 import com.revature.project1.models.AppUser;
-import com.revature.project1.services.UserService;
+import com.revature.project1.services.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class UserServlet extends HttpServlet {
 
-    private UserService userService;
+    private Service userService;
 
-    public UserServlet(UserService userService){
+    public UserServlet(Service userService){
         this.userService = userService;
     }
     //post CREATE - INSERT
@@ -30,7 +30,6 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
-        resp.setStatus(200);
         resp.setContentType("application/json");
 
         try {
@@ -39,7 +38,6 @@ public class UserServlet extends HttpServlet {
             writer.write("credentials obj: " + String.valueOf(newUser ) +
                     "\ncred uname: " + newUser .getUsername()
                     + "\n cred pword: " + newUser .getPassword() + "\n");
-            resp.setStatus(200);
             userService.register(newUser);
             //throwing auth error here:issue is that userDao is not finding my user
             writer.write(mapper.writeValueAsString(newUser));
@@ -72,21 +70,21 @@ public class UserServlet extends HttpServlet {
 //        }
 //
 //        String userIdParam = req.getParameter("id");
-        int userIdParam = 0;
-        try{
-            if(userIdParam == 0){
-                List<AppUser> users = userService.getAllUsers();
-                writer.write(mapper.writeValueAsString(users));
-                resp.setStatus(200);
-            }else{
-                //int soughtId = Integer.parseInt(userIdParam);
-                AppUser user = userService.getUserById(userIdParam);
-                writer.write(mapper.writeValueAsString(user));
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        int userIdParam = 0;
+//        try{
+//            if(userIdParam == 0){
+//                List<AppUser> users = userService.getAllUsers();
+//                writer.write(mapper.writeValueAsString(users));
+//                resp.setStatus(200);
+//            }else{
+//                //int soughtId = Integer.parseInt(userIdParam);
+//                AppUser user = userService.getUserById(userIdParam);
+//                writer.write(mapper.writeValueAsString(user));
+//
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
     }
 

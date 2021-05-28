@@ -1,6 +1,7 @@
 package com.revature.project1.webServices;
 
 import com.revature.project1.daos.UserDAO;
+import com.revature.project1.services.Service;
 import com.revature.project1.services.UserService;
 import com.revature.project1.webServices.servlet.AuthServlet;
 import com.revature.project1.webServices.servlet.UserServlet;
@@ -17,13 +18,14 @@ public class DependencyLoaderListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         UserDAO userDAO = new UserDAO();
-        UserService userService = new UserService(userDAO);
+//        UserService userService = new UserService(userDAO);
+        Service userService = new Service(userDAO);
 
-        AuthServlet authServlet = new AuthServlet(userService);
+//        AuthServlet authServlet = new AuthServlet(userService);
         UserServlet userServlet = new UserServlet(userService);
 
         ServletContext context = servletContextEvent.getServletContext();
-        context.addServlet("AuthServlet",authServlet).addMapping("/auth");
+//        context.addServlet("AuthServlet",authServlet).addMapping("/auth");
         context.addServlet("UserServlet",userServlet).addMapping("/users/*");
 
     }
