@@ -43,9 +43,6 @@ public class UserService {
         }
     }
     public void register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException{
-        if(!userDao.isUsernameAvailible(newUser)){
-            throw new InvalidRequestException(("new user data invalid"));
-        }
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
                 throw new UsernameUnavailableException();
@@ -56,7 +53,7 @@ public class UserService {
             }
 
             userDao.save(conn, newUser);
-            conn.commit();
+            //conn.commit();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }catch(UsernameUnavailableException | EmailUnavailableException e){

@@ -78,13 +78,15 @@ public class UserDAO {
             pstmt.setString(5,newUser.getLastName());
             pstmt.setInt(6,newUser.getAge());
             int rowsInserted = pstmt.executeUpdate();
-
+            System.out.printf("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",rowsInserted);
             if (rowsInserted != 0){
                 ResultSet rs = pstmt.getGeneratedKeys();
                 while(rs.next()){
                     newUser.setId(rs.getInt("user_id"));
                 }
             }
+            System.out.println("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+newUser+"!!!!!!!!!!!!!!!\n");
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -111,38 +113,7 @@ public class UserDAO {
         }
         return false;
     }
-    //Checks whether or not an email has been used already @EJ: You spelled 'available' wrong lol
-    public Boolean isEmailAvailible(String email){
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = "select * from bigballerbank.customer where email = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,email);
-            ResultSet rs = pstmt.executeQuery();
 
-            if(rs.next()){
-                return false;
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return true;
-    }
-    //Checks if username has been taken @EJ: Do you know how to spell?
-    public Boolean isUsernameAvailible(AppUser username){
-        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = "select * from bigballerbank.customer where username = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,username.getUsername());
-            ResultSet rs = pstmt.executeQuery();
-
-            if(rs.next()){
-                return false;
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return true;
-    }
     private AppUser getOne(ResultSet rs) throws SQLException {
 
         AppUser user = null;
@@ -186,32 +157,7 @@ public class UserDAO {
 
         return _user;
     }
-    public AppUser loginValidation( String username, String password) {
-        System.out.println(username);
-        AppUser _user = null;
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = "select * from bigballerbank.customer where username = ? and password = ?";
-            if (conn == null) {
-                throw new NullPointerException(System.getProperty("host_url") +
-                        " is what has been given as the host url from environment variables " +
-                        "\n and the username is: " +
-                        System.getProperty("username") + " with a password of: " + System.getProperty("password"));
-            }
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
 
-            _user = getOne(rs);
-            System.out.println(_user.getUsername());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataSourceException();
-        }
-
-        return _user;
-    }
 
 
 //    // TODO implement me: You can only delete an account when signed in
@@ -393,42 +339,34 @@ public class UserDAO {
         return currentUserTransactions;
     }
     public boolean isEmailAvailable(Connection conn, String email) {
-        try {
-
-            String sql = "select * from quizzard.users where email = ?";
+        try{
+            String sql = "select * from bigballerbank.customer where email = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
-
+            pstmt.setString(1,email);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
+
+            if(rs.next()){
                 return false;
             }
-
-        } catch (SQLException e) {
-            throw new DataSourceException();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-
         return true;
     }
     public boolean isUsernameAvailable(Connection conn, String username) {
         try {
-
-            String sql = "select * from quizzard.users where username = ?";
+            String sql = "select * from bigballerbank.customer where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
-
             ResultSet rs = pstmt.executeQuery();
+
             if (rs.next()) {
                 return false;
             }
-
-        } catch (SQLException e) {
-            throw new DataSourceException();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-
         return true;
-
     }
-
 
 }
