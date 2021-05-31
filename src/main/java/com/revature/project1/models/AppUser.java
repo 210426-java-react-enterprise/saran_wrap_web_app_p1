@@ -1,5 +1,4 @@
 package com.revature.project1.models;
-import com.revature.project1.exception.*;
 //import com.revature.project1.annotations.Column;
 //import com.revature.project1.annotations.Entity;
 //import com.revature.project1.annotations.Id;
@@ -29,10 +28,14 @@ public class AppUser {
     //@Column(name = "user_age", nullable = false)
     private int age;
 
+    //Column(name = user_status,nullable = true)
+    private String userStatus;
+
     public  AppUser(){
         super();
     }
-    public AppUser(String username,String password,String email,String firstName,String lastName,int age){
+    public AppUser(String username, String password, String email, String firstName, String lastName, int age, String userStatus){
+
         System.out.println("AppUser invoked!");
         this.username = username;
         this.password = password;
@@ -41,6 +44,7 @@ public class AppUser {
         this.lastName = lastName;
         this.age = age;
         this.id = id;
+        this.userStatus = userStatus;
     }
     public String getUsername(){
         return username;
@@ -103,4 +107,11 @@ public class AppUser {
         return sb.toString();
     }
 
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
+    }
 }

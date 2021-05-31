@@ -57,7 +57,8 @@ public class RegisterScreen extends Screen {
             age = Integer.parseInt(consoleReader.readLine());
 
 
-            AppUser newUser = new AppUser(username, password, email, firstName, lastName, age);
+            String userStatus = null;
+            AppUser newUser = new AppUser(username, password, email, firstName, lastName, age, userStatus);
             //userDao.save(newUser);
             userService.register(newUser);
             System.out.println("Registration Succesful");

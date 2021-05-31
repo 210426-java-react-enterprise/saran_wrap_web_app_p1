@@ -29,6 +29,7 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 AppUser temp = new AppUser();
+                ResultSetMetaData rsmd = rs.getMetaData();
                 temp.setId(rs.getInt("user_id"));
                 temp.setUsername(rs.getString("username"));
                 temp.setPassword(rs.getString("password"));
@@ -82,6 +83,7 @@ public class UserDAO {
             if (rowsInserted != 0){
                 ResultSet rs = pstmt.getGeneratedKeys();
                 while(rs.next()){
+                    //System.out.println(rs.getInt(newUser.getId()));
                     newUser.setId(rs.getInt("user_id"));
                 }
             }
@@ -160,20 +162,19 @@ public class UserDAO {
 
 
 
-//    // TODO implement me: You can only delete an account when signed in
-//    public void deleteAccount(AppUser user){
-//        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-//            String sql = "delete * from bigballerbank.users where username = ?";
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            pstmt.setInt(1,user.getId());
-//
-//
-//            ResultSet rs = pstmt.executeQuery();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    // TODO implement me: You can only delete an account when signed in
+    public void deleteUser(Connection conn,String username){
+        try{
+            String sql = "delete * from bigballerbank.users where username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,username);
+            ResultSet rs = pstmt.executeQuery();
+            System.out.println(rs);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**Mark:: ----ALL USER ACCOUNT METHODS----**/
@@ -258,6 +259,19 @@ public class UserDAO {
             pstmt.execute();
             System.out.println("New balance: " + balance);
     } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    //Updates user's balance after a transaction has been made
+    public void updateUserStatus (int userID,String status, Connection conn) {
+        try{
+            String sql = "update bigballerbank.customer set user_status = ? where user_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,status);
+            pstmt.setInt(2,userID);
+            pstmt.execute();
+            System.out.println("Current User Status: " + status);
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }

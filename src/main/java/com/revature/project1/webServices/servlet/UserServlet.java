@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserServlet extends HttpServlet {
@@ -55,51 +56,62 @@ public class UserServlet extends HttpServlet {
     //get READ - SELECT
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //mapper object that converts json file
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
-//        resp.setContentType("application/json");
-//
-//        HttpSession session = req.getSession(false);
-//        AppUser requestingUser=(session == null) ? null : (AppUser)  session.getAttribute("this-user");
+        resp.setContentType("application/json");
+        List<AppUser> allUsers = userService.getAllUsers();
+        writer.write(mapper.writeValueAsString(allUsers));
+        resp.setStatus(200);
 
-//        if(requestingUser == null){
-//            resp.setStatus((401));
-//
-//            return;
-//        }else if(!requestingUser.getUsername().equals("username")) {
-//            resp.setStatus(403);
-//        }
+//        HttpSession session = req.getSession(false);
+////        //AppUser requestingUser = (session == null) ? null : (AppUser) session.getAttribute("this-user");
+////        AppUser c
+////        if (requestingUser == null) {
+////            //System.out.println(userService.getAllUsers());
+////            resp.setStatus(401);
+//////            return;
+////        } else if (!requestingUser.getUsername().equals("wsingleton")) {
+////            resp.setStatus(403);
+//////            return;
+////        }
 //
 //        String userIdParam = req.getParameter("id");
-        int userIdParam = 0;
-        try{
-            if(userIdParam == 0){
-                List<AppUser> users = userService.getAllUsers();
-                writer.write(mapper.writeValueAsString(users));
-                resp.setStatus(200);
-            }else{
-                //int soughtId = Integer.parseInt(userIdParam);
-                AppUser user = userService.getUserById(userIdParam);
-                writer.write(mapper.writeValueAsString(user));
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//
+//        try {
+//            if (userIdParam == null) {
+//                List<AppUser> users = userService.getAllUsers();
+//                writer.write(mapper.writeValueAsString(users));
+//            } else {
+//                AppUser user = userService.getUserById(Integer.parseInt(userIdParam));
+//                writer.write(mapper.writeValueAsString(user));
+//            }
+//        } catch (ResourceNotFoundException e) {
+//            resp.setStatus(404);
+//        } catch (InvalidRequestException e) {
+//            resp.setStatus(400);
+//        }
 
     }
+
 
     //put UPDATE - UPDATE
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //dispatcher.dispatch(req, resp);
+        PrintWriter writer = resp.getWriter();
+        AppUser userToBeDeactivated = (AppUser) req.getSession().getAttribute("this-user");
+        try {
+            userService.updateUserStatus(userToBeDeactivated);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        //writer.write(mapper.writeValueAsString(allUsers));
+        resp.setStatus(200);
     }
 
     //delete DELETE - DELETE
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //dispatcher.dispatch(req, resp);
-    }
+//    @Override
+//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        //dispatcher.dispatch(req, resp);
+//    }
 
 }

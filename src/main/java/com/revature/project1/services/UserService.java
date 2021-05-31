@@ -26,6 +26,13 @@ public class UserService {
         }
 
     }
+    public void deleteUserAccount(AppUser userToBeDeleted){
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+            userDao.deleteUser(conn, userToBeDeleted.getUsername());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     public AppUser authenticate(String username,String password) throws AuthenticationException{
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
@@ -72,6 +79,20 @@ public class UserService {
         if (isNullOrEmpty.test(user.getLastName()) || lengthIsInvalid.test(user.getLastName(), 25)) return false;
         return user.getAge() >= 0;
     }
+    public void updateUserStatus(AppUser appUser) throws SQLException {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
+
+              userDao.updateUserStatus(appUser.getId(), "inactive", conn);
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }catch(UsernameUnavailableException | EmailUnavailableException e){
+            throw new ResourcePersistenceException(e.getMessage());
+        }
+    }
+
+
     public AppUser getUserById(int id) {
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
