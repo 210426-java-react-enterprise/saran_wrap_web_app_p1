@@ -23,7 +23,7 @@ public class AuthServlet extends HttpServlet {
     public AuthServlet(UserService userService) {
         this.userService = userService;
     }
-
+    //signs user out of their account
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -34,6 +34,7 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
+    //securely logs in a valid user
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

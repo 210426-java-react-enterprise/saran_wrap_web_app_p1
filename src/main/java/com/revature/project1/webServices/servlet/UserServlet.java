@@ -26,7 +26,9 @@ public class UserServlet extends HttpServlet {
     public UserServlet(UserService userService){
         this.userService = userService;
     }
+
     //post CREATE - INSERT
+    //registers a new customer
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -42,10 +44,8 @@ public class UserServlet extends HttpServlet {
                     + "\n cred pword: " + newUser .getPassword() + "\n");
             resp.setStatus(200);
             userService.register(newUser);
-            //throwing auth error here:issue is that userDao is not finding my user
             writer.write(mapper.writeValueAsString(newUser));
 
-            //req.getSession().setAttribute("this-user", authUser);
             resp.setStatus(200);
         }catch (Exception e){
             e.printStackTrace();
@@ -54,6 +54,7 @@ public class UserServlet extends HttpServlet {
     }
 
     //get READ - SELECT
+    //Grabs all active users and displays them in json format
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -63,38 +64,11 @@ public class UserServlet extends HttpServlet {
         writer.write(mapper.writeValueAsString(allUsers));
         resp.setStatus(200);
 
-//        HttpSession session = req.getSession(false);
-////        //AppUser requestingUser = (session == null) ? null : (AppUser) session.getAttribute("this-user");
-////        AppUser c
-////        if (requestingUser == null) {
-////            //System.out.println(userService.getAllUsers());
-////            resp.setStatus(401);
-//////            return;
-////        } else if (!requestingUser.getUsername().equals("wsingleton")) {
-////            resp.setStatus(403);
-//////            return;
-////        }
-//
-//        String userIdParam = req.getParameter("id");
-//
-//        try {
-//            if (userIdParam == null) {
-//                List<AppUser> users = userService.getAllUsers();
-//                writer.write(mapper.writeValueAsString(users));
-//            } else {
-//                AppUser user = userService.getUserById(Integer.parseInt(userIdParam));
-//                writer.write(mapper.writeValueAsString(user));
-//            }
-//        } catch (ResourceNotFoundException e) {
-//            resp.setStatus(404);
-//        } catch (InvalidRequestException e) {
-//            resp.setStatus(400);
-//        }
-
     }
 
 
     //put UPDATE - UPDATE
+    //deactivates a user account by setting user_status to inactive
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
@@ -107,11 +81,5 @@ public class UserServlet extends HttpServlet {
         //writer.write(mapper.writeValueAsString(allUsers));
         resp.setStatus(200);
     }
-
-    //delete DELETE - DELETE
-//    @Override
-//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        //dispatcher.dispatch(req, resp);
-//    }
 
 }
