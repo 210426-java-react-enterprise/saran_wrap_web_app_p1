@@ -1,41 +1,36 @@
 package com.revature.project1.models;
-//import com.revature.project1.annotations.Column;
-//import com.revature.project1.annotations.Entity;
-//import com.revature.project1.annotations.Id;
+import com.revature.project1.annotations.Column;
+import com.revature.project1.annotations.Entity;
+import com.revature.project1.annotations.Id;
 
-//@Table
-//@Entity(name = "app_users")
+@Entity(name = "customer")
 public class AppUser {
-    //@Id
-    //@Column(name = "user_id")
+    @Id
+    @Column(name = "user_id")
     private int id;
 
-    //@Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    //@Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    //@Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    //@Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    //@Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    //@Column(name = "user_age", nullable = false)
+    @Column(name = "user_age", nullable = false)
     private int age;
-
-    //Column(name = user_status,nullable = true)
-    private String userStatus;
 
     public  AppUser(){
         super();
     }
-    public AppUser(String username, String password, String email, String firstName, String lastName, int age, String userStatus){
-
+    public AppUser(String username,String password,String email,String firstName,String lastName,int age){
         System.out.println("AppUser invoked!");
         this.username = username;
         this.password = password;
@@ -44,7 +39,6 @@ public class AppUser {
         this.lastName = lastName;
         this.age = age;
         this.id = id;
-        this.userStatus = userStatus;
     }
     public String getUsername(){
         return username;
@@ -107,11 +101,4 @@ public class AppUser {
         return sb.toString();
     }
 
-    public String getUserStatus() {
-        return userStatus;
-    }
-
-    public void setUserStatus(String userStatus) {
-        this.userStatus = userStatus;
-    }
 }
