@@ -78,7 +78,7 @@ public class UserDAO {
             pstmt.setString(4,newUser.getFirstName());
             pstmt.setString(5,newUser.getLastName());
             pstmt.setInt(6,newUser.getAge());
-            pstmt.setString(7,newUser.getUserStatus());
+            pstmt.setBoolean(7,newUser.getUserStatus());
             int rowsInserted = pstmt.executeUpdate();
             System.out.printf("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",rowsInserted);
             if (rowsInserted != 0){
@@ -130,6 +130,7 @@ public class UserDAO {
             user.setLastName(rs.getString("last_name"));
             user.setEmail(rs.getString("email"));
             user.setAge(rs.getInt("user_age"));
+            user.setUserStatus(rs.getBoolean("user_status"));
         }
 
         return user;

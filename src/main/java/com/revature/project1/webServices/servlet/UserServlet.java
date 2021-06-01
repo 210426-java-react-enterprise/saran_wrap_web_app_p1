@@ -30,6 +30,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
+        boolean success = true;
 
         try {
 
@@ -37,10 +38,12 @@ public class UserServlet extends HttpServlet {
             writer.write("credentials obj: " + String.valueOf(newUser ) +
                     "\ncred uname: " + newUser .getUsername()
                     + "\n cred pword: " + newUser .getPassword() + "\n");
-            userService.register(newUser);
-            resp.setContentType("application/json");
-            writer.write(mapper.writeValueAsString(newUser));
-            resp.setStatus(200);
+            success = userService.register(newUser);
+            if (success) {
+                resp.setContentType("application/json");
+                writer.write(mapper.writeValueAsString(newUser));
+                resp.setStatus(200);
+            } else resp.setStatus(401);
         }catch (Exception e){
             e.printStackTrace();
         }
