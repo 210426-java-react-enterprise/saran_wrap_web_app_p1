@@ -21,6 +21,7 @@ public class AuthServlet extends HttpServlet {
 
 //    private final UserService userService;
     private final Service userService;
+    private HttpSession session;
 
 //    public AuthServlet(UserService userService) {
 //        this.userService = userService;
@@ -36,6 +37,7 @@ public class AuthServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
 
         if (session != null) {
+            this.session.invalidate();
             session.invalidate();
         }
     }
@@ -46,7 +48,6 @@ public class AuthServlet extends HttpServlet {
 
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
-        resp.setStatus(200);
         resp.setContentType("application/json");
 
         try {
@@ -55,12 +56,12 @@ public class AuthServlet extends HttpServlet {
             writer.write("credentials obj: "+String.valueOf(creds)+
                     "\ncred uname: "+creds.getUsername()
                     +"\n cred pword: "+creds.getPassword()+"\n");
-            resp.setStatus(200);
             AppUser authUser = userService.authenticate(creds.getUsername(), creds.getPassword());
             //throwing auth error here:issue is that userDao is not finding my user
             writer.write(mapper.writeValueAsString(authUser));
 
-            req.getSession().setAttribute("this-user", authUser);
+            session = req.getSession();
+            session.setAttribute("this-user", authUser);
             resp.setStatus(200);
 
 
@@ -75,5 +76,23 @@ public class AuthServlet extends HttpServlet {
 
             resp.setStatus(500);
         }
+    }
+
+    //put UPDATE - UPDATE
+    //deactivates a user account by setting user_status to inactive
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            HttpSession session;
+            session = req.getSession(false);
+            if (session == null) session = this.session;
+            AppUser userToBeDeactivated = (AppUser) session.getAttribute("this-user");
+            userService.softDelete(userToBeDeactivated);
+            session.invalidate();
+            resp.setStatus(200);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

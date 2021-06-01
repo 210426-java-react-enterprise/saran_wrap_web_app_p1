@@ -41,8 +41,9 @@ public class Service {
         return user;
     }
 
-    public void softDelete(AppUser user, String activityStatus) {
-        String sql = "update customer set user_status = '" + activityStatus + "' where username = '"+user.getUsername()+"'";
-        ss.customCommand(sql);
+    public void softDelete(AppUser user) {
+        user.setUserStatus(false);
+        String condition = "username = '"+user.getUsername()+"'";
+        ss.updateObject(user, condition);
     }
 }

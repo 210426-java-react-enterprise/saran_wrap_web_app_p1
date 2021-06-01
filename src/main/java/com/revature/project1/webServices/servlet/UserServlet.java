@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -58,19 +59,4 @@ public class UserServlet extends HttpServlet {
         resp.setStatus(200);
 
     }
-
-
-    //put UPDATE - UPDATE
-    //deactivates a user account by setting user_status to inactive
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        PrintWriter writer = resp.getWriter();
-//        AppUser userToBeDeactivated = (AppUser) req.getSession().getAttribute("this-user");
-        AppUser userToBeDeactivated = mapper.readValue(req.getInputStream(),AppUser.class);
-        userService.softDelete(userToBeDeactivated, "inactive");
-        //writer.write(mapper.writeValueAsString(allUsers));
-        resp.setStatus(200);
-    }
-
 }

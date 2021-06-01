@@ -27,6 +27,9 @@ public class AppUser {
     @Column(name = "user_age", nullable = false)
     private int age;
 
+    @Column(name = "user_status", nullable = true)
+    private boolean userStatus;
+
     public  AppUser(){
         super();
     }
@@ -40,6 +43,11 @@ public class AppUser {
         this.age = age;
         this.id = id;
     }
+    public AppUser(String username,String password,String email,String firstName,String lastName,int age, boolean userStatus) {
+        this(username, password, email, firstName, lastName, age);
+        this.userStatus = userStatus;
+    }
+
     public String getUsername(){
         return username;
     }
@@ -80,11 +88,18 @@ public class AppUser {
         this.age = age;
     }
 
+    public boolean getUserStatus() {
+        return userStatus;
+    }
+    public void setUserStatus(boolean userStatus) {
+        this.userStatus = userStatus;
+    }
+
     public void setId(int id) { this.id = id; }
     public int getId() { return id; }
 
     public String toFileString() {
-        return String.format("%s;%s;%s;%s;%s;%d", username, password, email, firstName, lastName, age);
+        return String.format("%s;%s;%s;%s;%s;%d;%b", username, password, email, firstName, lastName, age, userStatus);
     }
 
 
@@ -96,7 +111,8 @@ public class AppUser {
         sb.append(", email='").append(email).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", age=").append(age);
+        sb.append(", age=").append(age).append('\'');
+        sb.append(", userStatus=").append(userStatus);
         sb.append('}');
         return sb.toString();
     }
