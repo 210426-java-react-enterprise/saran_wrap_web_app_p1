@@ -20,7 +20,7 @@ public class UserService {
     }
     public List<AppUser> getAllUsers() {
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            return userDao.findAllUsers(conn);
+            return userDao.findAllUsers();
         }  catch (SQLException | DataSourceException e) {
             throw new ResourceNotFoundException();
         }
@@ -39,8 +39,8 @@ public class UserService {
             //add connection to loginValidation will break loginScreen
             //Figure out why orElseThrow isnt functioning
             AppUser defaultUser = new AppUser();
-            if ((userDao.loginValidation(conn,username,password) != null)){
-                return userDao.loginValidation(conn, username, password);
+            if ((userDao.loginValidation(username,password) != null)){
+                return userDao.loginValidation( username, password);
             }
             return defaultUser;
 
@@ -51,15 +51,18 @@ public class UserService {
     }
     public void register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException{
         try(Connection conn = ConnectionFactory.getInstance().getConnection()){
-            if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
+            if (!userDao.isUsernameAvailable(newUser.getUsername())) {
                 throw new UsernameUnavailableException();
             }
 
-            if (!userDao.isEmailAvailable(conn, newUser.getEmail())) {
+            if (!userDao.isEmailAvailable(newUser.getEmail())) {
+                throw new EmailUnavailableException();
+            }
+            if (!userDao.isPasswordSecure(newUser.getPassword())) {
                 throw new EmailUnavailableException();
             }
 
-            userDao.save(conn, newUser);
+            userDao.save( newUser);
             //conn.commit();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -97,7 +100,7 @@ public class UserService {
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            return userDao.findUserById(conn, id)
+            return userDao.findUserById(id)
                     .orElseThrow(ResourceNotFoundException::new);
 
         }  catch (SQLException | DataSourceException e) {

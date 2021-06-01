@@ -18,11 +18,11 @@ import java.util.Optional;
 public class UserDAO {
 
 
-    public List<AppUser> findAllUsers(Connection conn) {
+    public List<AppUser> findAllUsers() {
         List<AppUser> users = new ArrayList<>();
 
 
-        try {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
             String sql = "SELECT * FROM bigballerbank.customer";
             Statement stmt = conn.createStatement();
@@ -48,11 +48,11 @@ public class UserDAO {
         return users;
     }
 
-    public Optional<AppUser> findUserById(Connection conn, int id) {
+    public Optional<AppUser> findUserById( int id) {
 
         Optional<AppUser> _user = Optional.empty();
 
-        try {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = "SELECT * FROM bigballerbank.customer WHERE user_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
@@ -68,9 +68,9 @@ public class UserDAO {
         return _user;
     }
 
-    public void save(Connection conn,AppUser newUser){
-        try {
-            String sqlInsertUser = "insert into bigballerbank.customer (username , password , email , first_name , last_name , user_age ) values (?,?,?,?,?,?)";
+    public void save(AppUser newUser){
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sqlInsertUser = "insert into bigballerbank.customer (username , password , email , first_name , last_name , user_age, user_status ) values (?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sqlInsertUser,new String[]{"user_id"});
             pstmt.setString(1,newUser.getUsername());
             pstmt.setString(2,newUser.getPassword());
@@ -78,6 +78,7 @@ public class UserDAO {
             pstmt.setString(4,newUser.getFirstName());
             pstmt.setString(5,newUser.getLastName());
             pstmt.setInt(6,newUser.getAge());
+            pstmt.setString(7,newUser.getUserStatus());
             int rowsInserted = pstmt.executeUpdate();
             System.out.printf("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",rowsInserted);
             if (rowsInserted != 0){
@@ -116,7 +117,7 @@ public class UserDAO {
         return false;
     }
 
-    private AppUser getOne(ResultSet rs) throws SQLException {
+    public AppUser getOne(ResultSet rs) throws SQLException {
 
         AppUser user = null;
 
@@ -135,10 +136,10 @@ public class UserDAO {
 
     }
     //Checks to see if user account exists in DB
-    public AppUser loginValidation(Connection conn, String username, String password) {
+    public AppUser loginValidation( String username, String password) {
 
         AppUser _user = null;
-        try {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = "select * from bigballerbank.customer where username = ? and password = ?";
             if (conn == null) {
                 throw new NullPointerException(System.getProperty("host_url") +
@@ -352,8 +353,8 @@ public class UserDAO {
         }
         return currentUserTransactions;
     }
-    public boolean isEmailAvailable(Connection conn, String email) {
-        try{
+    public boolean isEmailAvailable(String email) {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = "select * from bigballerbank.customer where email = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,email);
@@ -367,8 +368,8 @@ public class UserDAO {
         }
         return true;
     }
-    public boolean isUsernameAvailable(Connection conn, String username) {
-        try {
+    public boolean isUsernameAvailable( String username) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = "select * from bigballerbank.customer where username = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
