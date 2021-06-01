@@ -38,7 +38,6 @@ public class AuthServlet extends HttpServlet {
 
         if (session != null) {
             this.session.invalidate();
-            session.invalidate();
         }
     }
 
