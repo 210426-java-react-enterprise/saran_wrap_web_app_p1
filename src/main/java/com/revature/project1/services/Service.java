@@ -1,42 +1,48 @@
 package com.revature.project1.services;
 
-import com.revature.project1.daos.UserDAO;
-import com.revature.project1.exception.*;
+import com.revature.project1.dbentry.SqlCreation;
 import com.revature.project1.models.AppUser;
-import com.revature.project1.util.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import com.revature.project1.services.SaranServices;
+import java.util.ArrayList;
 
 public class Service {
-    private UserDAO userDao;
-    private SaranServices ss = new SaranServices();
+    SqlCreation sql;
+    private SaranServices ss = new SaranServices(sql);
 
-    public Service(UserDAO userDao) {
-        this.userDao = userDao;
+    public Service(SaranServices ss) {
+        this.ss = ss;
     }
 
-    public void register(AppUser newUser) throws InvalidRequestException, ResourcePersistenceException {
-        try (Connection conn = ConnectionFactory.getInstance()
-                                                .getConnection()) {
-            if (!userDao.isUsernameAvailable(conn, newUser.getUsername())) {
-                throw new UsernameUnavailableException();
-            }
+    public void register(AppUser newUser) {
+            ss.insertObject(newUser);
+    }
 
-            if (!userDao.isEmailAvailable(conn, newUser.getEmail())) {
-                throw new EmailUnavailableException();
-            }
+    public void getUser(String condition) {
+        ss.selectObject(AppUser.class, condition);
+    }
 
-            ss.insertInDB(newUser);
-            //conn.commit();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (UsernameUnavailableException | EmailUnavailableException e) {
-            throw new ResourcePersistenceException(e.getMessage());
-        }
+    public ArrayList<AppUser> getAllUsers() {
+        return ss.selectAllObjects(AppUser.class);
+    }
+
+    public void update(AppUser newUser, String condition) {
+        condition = "username = '"+newUser.getUsername()+"'";
+        ss.updateObject(newUser, condition);
+    }
+
+    public void delete(String condition) {
+        ss.deleteObject(AppUser.class, condition);
+    }
+
+    public AppUser authenticate(String username, String password) {
+        String condition = "(username = '"+username+"' and password = '"+password+"')";
+        ArrayList<AppUser> userList = ss.selectObject(AppUser.class, condition);
+        AppUser user = userList.get(0);
+        return user;
+    }
+
+    public void softDelete(AppUser user, String activityStatus) {
+        String sql = "update customer set user_status = '" + activityStatus + "' where username = '"+user.getUsername()+"'";
+        ss.customCommand(sql);
     }
 }

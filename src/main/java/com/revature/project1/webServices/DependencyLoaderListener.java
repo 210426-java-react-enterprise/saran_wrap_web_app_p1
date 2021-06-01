@@ -1,6 +1,8 @@
 package com.revature.project1.webServices;
 
 import com.revature.project1.daos.UserDAO;
+import com.revature.project1.dbentry.SqlCreation;
+import com.revature.project1.services.SaranServices;
 import com.revature.project1.services.Service;
 import com.revature.project1.services.UserService;
 import com.revature.project1.webServices.servlet.AuthServlet;
@@ -18,8 +20,10 @@ public class DependencyLoaderListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         UserDAO userDAO = new UserDAO();
+        SaranServices ss = new SaranServices(new SqlCreation());
+
 //        UserService userService = new UserService(userDAO);
-        Service userService = new Service(userDAO);
+        Service userService = new Service(ss);
 
 //        AuthServlet authServlet = new AuthServlet(userService);
         UserServlet userServlet = new UserServlet(userService);

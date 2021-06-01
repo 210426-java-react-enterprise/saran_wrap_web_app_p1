@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.revature.project1.exception.AuthenticationException;
 import com.revature.project1.models.AppUser;
+import com.revature.project1.services.Service;
 import com.revature.project1.services.UserService;
 import com.revature.project1.dtos.Credentials;
 
@@ -18,11 +19,16 @@ import java.io.PrintWriter;
 
 public class AuthServlet extends HttpServlet {
 
-    private final UserService userService;
+//    private final UserService userService;
+    private final Service userService;
 
-    public AuthServlet(UserService userService) {
-        this.userService = userService;
+//    public AuthServlet(UserService userService) {
+//        this.userService = userService;
+//    }
+    public AuthServlet(Service service) {
+        this.userService = service;
     }
+
     //signs user out of their account
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
