@@ -51,7 +51,7 @@ public class AuthServlet extends HttpServlet {
                     +"\n cred pword: "+creds.getPassword()+"\n");
             resp.setStatus(200);
             AppUser authUser = userService.authenticate(creds.getUsername(), creds.getPassword());
-            //throwing auth error here:issue is that userDao is not finding my user
+
             writer.write(mapper.writeValueAsString(authUser));
 
             req.getSession().setAttribute("this-user", authUser);
