@@ -7,20 +7,20 @@
 - [x] Apache Maven
 - [x] Jackson library (for JSON marshalling/unmarshalling)
 - [x] Java EE Servlet API (v4.0+)
-- [ ] PostGreSQL deployed on AWS RDS
+- [x] PostGreSQL deployed on AWS RDS
 - [x] AWS CodeBuild
 - [x] AWS CodePipeline
 - [x] Git SCM
 
 ## Functional Requirements
 - [x] CRUD operations are supported for one or more domain objects via the web application's exposed endpoints
-- [x] JDBC logic is abstracted away by Saran Wrap ORM
+- [x] JDBC logic is abstracted away by [Saran Wrap ORM](https://github.com/210426-java-react-enterprise/saran_wrap_orm_p1)
 - [x] Basic CRUD support using Saran Wrap ORM
 - [x] Leverages Saran Wrap ORM for programmatic configuration of entities
 
 ## Non-Functional Requirements
 - [ ] 80% line coverage of all service layer classes
-- [ ] Generated Jacoco reports that display coverage metrics
+- [x] Generated Jacoco reports that display coverage metrics
 - [x] Usage of the java.util.Stream API within your project
 - [x] Custom ORM source code should be included within the web application as a Maven dependency
 - [x] Continuous integration pipelines that builds some main branch each project (the ORM and the web app, separately)
