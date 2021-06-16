@@ -18,18 +18,20 @@ import java.io.PrintWriter;
 
 public class AuthServlet extends HttpServlet {
 
-//    private final UserService userService;
     private final Service userService;
     private HttpSession session;
 
-//    public AuthServlet(UserService userService) {
-//        this.userService = userService;
-//    }
     public AuthServlet(Service service) {
         this.userService = service;
     }
 
-    //signs user out of their account
+    /**
+     *  Invalidates user session
+     * @param req a HttpServletRequest
+     * @param resp a HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -41,6 +43,14 @@ public class AuthServlet extends HttpServlet {
     }
 
     //securely logs in a valid user
+
+    /**
+     * Logs user in using json
+     * @param req a HttpServletRequest
+     * @param resp a HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -76,8 +86,13 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
-    //put UPDATE - UPDATE
-    //deactivates a user account by setting user_status to inactive
+    /**
+     * Invalidates the user in the database
+     * @param req a HttpServletRequest
+     * @param resp a HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
