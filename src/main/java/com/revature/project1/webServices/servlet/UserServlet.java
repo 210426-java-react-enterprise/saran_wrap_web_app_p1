@@ -15,17 +15,19 @@ import java.util.List;
 
 public class UserServlet extends HttpServlet {
 
-//    private UserService userService;
     private Service userService;
 
-//    public UserServlet(UserService userService){
     public UserServlet(Service service){
-//        this.userService = userService;
         this.userService = service;
     }
 
-    //post CREATE - INSERT
-    //registers a new customer
+    /**
+     * Registers a new customer using json
+     * @param req a HttpServletRequest
+     * @param resp a HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -50,8 +52,13 @@ public class UserServlet extends HttpServlet {
 
     }
 
-    //get READ - SELECT
-    //Grabs all active users and displays them in json format
+    /**
+     * Grabs all active users and displays them in json format
+     * @param req a HttpServletRequest
+     * @param resp a HttpServletResponse
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();

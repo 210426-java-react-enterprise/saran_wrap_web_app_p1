@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public class Service {
     SqlCreation sql;
-    private SaranServices ss = new SaranServices(sql);
+    private SaranServices ss;
 
     public Service(SaranServices ss) {
         this.ss = ss;
@@ -18,8 +18,6 @@ public class Service {
     public boolean register(AppUser newUser) {
         boolean userValid = isUserValid(newUser);
         boolean passwordSecure = isPasswordSecure(newUser);
-//        boolean usernameAvailable = isUsernameAvailable(newUser);
-//        boolean emailAvailable = isEmailAvailable(newUser);
 
         if (userValid && passwordSecure) {
             ss.insertObject(newUser);
