@@ -1,8 +1,8 @@
 # Team F - Project 1 - Saran Wrap Web App
 
 ## Instructions for DevOps Team
-1. Set up ORM first
-   - Refer to ORM Github repo for instructions.
+1. Set up [ORM](https://github.com/210426-java-react-enterprise/saran_wrap_orm_p1) first
+   - Use `mvn install` to add it to the local maven cache
 2. Launch Tomcat Server
 3. Create an applications.properties files in a resources folder
    - Resources folder should be in the src/main directory
