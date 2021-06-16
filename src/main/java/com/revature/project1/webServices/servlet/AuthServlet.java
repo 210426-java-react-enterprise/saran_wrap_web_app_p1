@@ -42,7 +42,6 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
-    //securely logs in a valid user
 
     /**
      * Logs user in using json
