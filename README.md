@@ -2,7 +2,7 @@
 
 ## Instructions for DevOps Team
 1. Set up ORM first
- - Refer to ORM Github repo for instructions.
+   - Refer to ORM Github repo for instructions.
 2. Launch Tomcat Server
 3. Create an applications.properties files in a resources folder
    - Resources folder should be in the src/main directory
