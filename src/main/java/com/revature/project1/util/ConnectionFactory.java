@@ -2,7 +2,6 @@ package com.revature.project1.util;
 
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -60,20 +59,12 @@ public class ConnectionFactory {
     public Connection getConnection(){
         Connection conn = null;
         try{
-            /*
-            conn = DriverManager.getConnection(
-                    System.getenv("host-url"),
-                    System.getenv("username"),
-                    System.getenv("password")
-            );
-            */
 
             conn = DriverManager.getConnection(
                     props.getProperty("host-url"),
                     props.getProperty("username"),
                     props.getProperty("password")
             );
-            //conn.setAutoCommit(false);
 
         }catch(SQLException sqle){
             sqle.printStackTrace();

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.revature.project1.exception.AuthenticationException;
 import com.revature.project1.models.AppUser;
 import com.revature.project1.services.Service;
-import com.revature.project1.services.UserService;
 import com.revature.project1.dtos.Credentials;
 
 

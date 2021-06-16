@@ -62,7 +62,6 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
@@ -95,9 +94,8 @@
                         </execution>
                     </executions>
                 </plugin>
-
             </plugins>
-        </pluginManagement>
+
     </build>
 
     

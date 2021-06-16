@@ -31,3 +31,4 @@ target/
 
 #properties files
 *.properties
+*.sql
